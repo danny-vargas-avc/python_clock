@@ -11,12 +11,31 @@ except:
 
 root = Tk()
 root.title("Clock")
+
+# window size
 root.geometry('500x250')
+
+# stopwatch counter starting times
 stopwatch_counter_num = 66600
 stopwatch_running = False
 timer_counter_num = 66600
 timer_running = False
 
+# tabs: clock, alarm, stopwatch, timer
+tabs_control = Notebook(root)
+
+clock_tab = Frame(tabs_control)
+alarm_tab = Frame(tabs_control)
+stopwatch_tab = Frame(tabs_control)
+timer_tab = Frame(tabs_control)
+
+tabs_control.add(clock_tab, text="Clock")
+tabs_control.add(alarm_tab, text="Alarm")
+tabs_control.add(stopwatch_tab, text='Stopwatch')
+tabs_control.add(timer_tab, text='Timer')
+tabs_control.pack(expand = 1, fill ="both")
+
+# clock function
 def clock():
   date_time = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S/%p")
   date,time1 = date_time.split()
@@ -30,6 +49,13 @@ def clock():
   date_label.config(text= date)
   time_label.after(1000, clock)
 
+# datetime labels
+time_label = Label(clock_tab, font = 'calibri 40 bold', foreground = 'black')
+time_label.pack(anchor='center')
+date_label = Label(clock_tab, font = 'calibri 40 bold', foreground = 'black')
+date_label.pack(anchor='s')
+
+# alarm function
 def alarm():
   main_time = datetime.datetime.now().strftime("%H:%M %p")
   alarm_time = get_alarm_time_entry.get()
@@ -59,6 +85,18 @@ def alarm():
     get_alarm_time_entry.config(state='disabled')
     set_alarm_button.config(state='disabled')
   alarm_status_label.after(1000, alarm)
+
+# alarm labels
+get_alarm_time_entry = Entry(alarm_tab, font = 'calibri 15 bold')
+get_alarm_time_entry.pack(anchor='center')
+alarm_instructions_label = Label(alarm_tab, font = 'calibri 10 bold', text = "Enter Alarm Time. Eg -> 01:30 PM, 01 -> Hour, 30 -> Minutes")
+alarm_instructions_label.pack(anchor='s')
+
+set_alarm_button = Button(alarm_tab, text = "Set Alarm", command=alarm)
+set_alarm_button.pack(anchor='s')
+
+alarm_status_label = Label(alarm_tab, font = 'calibri 15 bold')
+alarm_status_label.pack(anchor='s')
 
 def stopwatch_counter(label):
   def count():
@@ -96,6 +134,19 @@ def stopwatch(work):
     stopwatch_start.config(state='enabled')
     stopwatch_stop.config(state='disabled')
     stopwatch_reset.config(state='disabled')
+
+# stopwatch labels/buttons
+stopwatch_label = Label(stopwatch_tab, font='calibri 40 bold', text='Stopwatch')
+stopwatch_label.pack(anchor='center')
+
+stopwatch_start = Button(stopwatch_tab, text='Start', command=lambda:stopwatch('start'))
+stopwatch_start.pack(anchor='center')
+
+stopwatch_stop = Button(stopwatch_tab, text='Stop', state='disabled',command=lambda:stopwatch('stop'))
+stopwatch_stop.pack(anchor='center')
+
+stopwatch_reset = Button(stopwatch_tab, text='Reset', state='disabled', command=lambda:stopwatch('reset'))
+stopwatch_reset.pack(anchor='center')
 
 def timer_counter(label):
   def count():
@@ -151,49 +202,7 @@ def timer(work):
     timer_get_entry.config(state='enabled')
     timer_label.config(text = 'Timer')
 
-tabs_control = Notebook(root)
-
-clock_tab = Frame(tabs_control)
-alarm_tab = Frame(tabs_control)
-stopwatch_tab = Frame(tabs_control)
-timer_tab = Frame(tabs_control)
-
-tabs_control.add(clock_tab, text="Clock")
-tabs_control.add(alarm_tab, text="Alarm")
-tabs_control.add(stopwatch_tab, text='Stopwatch')
-tabs_control.add(timer_tab, text='Timer')
-
-tabs_control.pack(expand = 1, fill ="both")
-
-time_label = Label(clock_tab, font = 'calibri 40 bold', foreground = 'black')
-time_label.pack(anchor='center')
-
-date_label = Label(clock_tab, font = 'calibri 40 bold', foreground = 'black')
-date_label.pack(anchor='s')
-
-get_alarm_time_entry = Entry(alarm_tab, font = 'calibri 15 bold')
-get_alarm_time_entry.pack(anchor='center')
-alarm_instructions_label = Label(alarm_tab, font = 'calibri 10 bold', text = "Enter Alarm Time. Eg -> 01:30 PM, 01 -> Hour, 30 -> Minutes")
-alarm_instructions_label.pack(anchor='s')
-
-set_alarm_button = Button(alarm_tab, text = "Set Alarm", command=alarm)
-set_alarm_button.pack(anchor='s')
-
-alarm_status_label = Label(alarm_tab, font = 'calibri 15 bold')
-alarm_status_label.pack(anchor='s')
-
-stopwatch_label = Label(stopwatch_tab, font='calibri 40 bold', text='Stopwatch')
-stopwatch_label.pack(anchor='center')
-
-stopwatch_start = Button(stopwatch_tab, text='Start', command=lambda:stopwatch('start'))
-stopwatch_start.pack(anchor='center')
-
-stopwatch_stop = Button(stopwatch_tab, text='Stop', state='disabled',command=lambda:stopwatch('stop'))
-stopwatch_stop.pack(anchor='center')
-
-stopwatch_reset = Button(stopwatch_tab, text='Reset', state='disabled', command=lambda:stopwatch('reset'))
-stopwatch_reset.pack(anchor='center')
-
+# timer labels and start/stop/reset buttons
 timer_get_entry = Entry(timer_tab, font='calibiri 15 bold')
 timer_get_entry.pack(anchor='center')
 
@@ -212,6 +221,8 @@ timer_stop.pack(anchor='center')
 timer_reset = Button(timer_tab, text='Reset', state='disabled', command=lambda:timer('reset'))
 timer_reset.pack(anchor='center')
 
+# run clock function
 clock()
 
+# run application as long as tkinter window is open
 mainloop()
